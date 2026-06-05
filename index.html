@@ -11,3 +11,27 @@
 
 </body>
 </html>
+<script type="module">
+
+import { db } from "./firebase-config.js";
+
+import {
+collection,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+async function loadLocations(){
+
+const snapshot =
+await getDocs(
+collection(db,"kebakaran")
+);
+
+console.log(snapshot.docs);
+
+}
+
+loadLocations();
+
+</script>
