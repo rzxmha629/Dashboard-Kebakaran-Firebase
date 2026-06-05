@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Dashboard Admin Kebakaran</title>
+
+<style>
+
+body{
+background:#021126;
+font-family:Segoe UI,sans-serif;
+color:white;
+padding:20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+.card{
+background:#042247;
+padding:20px;
+border-radius:12px;
+border:1px solid #00cfff;
+margin-bottom:20px;
+}
+
+input,textarea{
+width:100%;
+padding:12px;
+margin-top:5px;
+margin-bottom:15px;
+border:none;
+border-radius:8px;
+}
+
+button{
+background:#00cfff;
+border:none;
+padding:12px 20px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+opacity:.9;
+}
+
+#status{
+margin-top:15px;
+font-weight:bold;
+color:#00ff88;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>ADMIN DASHBOARD KEBAKARAN</h1>
+
+<div class="card">
+
+<h2>Tambah Kejadian Baru</h2>
+
+<label>Nama Lokasi</label>
+<input id="idlokasi" placeholder="contoh : cempakaputih">
+
+<label>Nama Tampilan Lokasi</label>
+<input id="lokasi" placeholder="Cempaka Putih">
+
+<label>Jumlah Rumah</label>
+<input id="rumah" type="number">
+
+<label>Jumlah KK</label>
+<input id="kk" type="number">
+
+<label>Jumlah Jiwa</label>
+<input id="jiwa" type="number">
+
+<label>Jumlah Pengungsi</label>
+<input id="pengungsi" type="number">
+
+<label>Total Pasien</label>
+<input id="totalpasien" type="number">
+
+<label>Rawat Jalan</label>
+<input id="rawatjalan" type="number">
+
+<label>Rawat Inap</label>
+<input id="rawatinap" type="number">
+
+<label>Pos Kesehatan</label>
+<input id="poskes" type="number">
+
+<label>Laki-laki</label>
+<input id="lakilaki" type="number">
+
+<label>Perempuan</label>
+<input id="perempuan" type="number">
+
+<label>Diagnosa</label>
+<textarea id="diagnosa" rows="5" placeholder="Hipertensi:15&#10;Headache:16&#10;ISPA:5"></textarea>
+
+<button onclick="simpanData()">
+SIMPAN DATA
+</button>
+
+<div id="status"></div>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { db } from "./firebase-config.js";
+
+import {
+doc,
+setDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+window.simpanData = async function(){
+
+try{
+
+const idlokasi =
+document.getElementById("idlokasi").value;
+
+const lokasi =
+document.getElementById("lokasi").value;
+
+const rumah =
+Number(document.getElementById("rumah").value);
+
+const kk =
+Number(document.getElementById("kk").value);
+
+const jiwa =
+Number(document.getElementById("jiwa").value);
+
+const pengungsi =
+Number(document.getElementById("pengungsi").value);
+
+const totalpasien =
+Number(document.getElementById("totalpasien").value);
+
+const rawatjalan =
+Number(document.getElementById("rawatjalan").value);
+
+const rawatinap =
+Number(document.getElementById("rawatinap").value);
+
+const poskes =
+Number(document.getElementById("poskes").value);
+
+const lakilaki =
+Number(document.getElementById("lakilaki").value);
+
+const perempuan =
+Number(document.getElementById("perempuan").value);
+
+const diagnosaText =
+document.getElementById("diagnosa").value;
+
+const diagnosa = [];
+
+diagnosaText
+.split("\n")
+.forEach(item=>{
+
+if(item.trim()!==""){
+
+const p = item.split(":");
+
+diagnosa.push({
+nama:p[0],
+jumlah:Number(p[1])
+});
+
+}
+
+});
+
+await setDoc(
+doc(db,"kebakaran",idlokasi),
+{
+lokasi,
+rumah,
+kk,
+jiwa,
+pengungsi,
+totalpasien,
+rawatjalan,
+rawatinap,
+poskes,
+lakilaki,
+perempuan,
+diagnosa
+}
+);
+
+document.getElementById("status").innerHTML =
+"✅ Data berhasil disimpan";
+
+}
+catch(err){
+
+document.getElementById("status").innerHTML =
+err.message;
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
