@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Infografis Pelayanan Kesehatan</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{background:#021126;color:#fff}
+.container{width:100%;min-height:100vh;padding:12px}
+.header{background:#042247;border:1px solid #00cfff;border-radius:14px;padding:20px;text-align:center;box-shadow:0 0 25px #00cfff55}
+.header h1{font-size:56px;line-height:1}
+.header h2{color:#ff4040}
+.tabs{display:flex;gap:10px;margin:12px 0}
+.tab{padding:10px 20px;border:1px solid #00cfff;background:#06214a;color:#fff;border-radius:10px;cursor:pointer}
+.active{background:#00cfff;color:#000;font-weight:bold}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+.card{background:#042247;padding:20px;border-radius:12px;text-align:center;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:-200%;background:linear-gradient(45deg,transparent,rgba(255,255,255,.15),transparent);animation:shine 6s linear infinite}
+@keyframes shine{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.red{border:2px solid #ff4040}.orange{border:2px solid orange}.blue{border:2px solid #00cfff}.green{border:2px solid #00ff88}
+.card h3{font-size:48px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.panel{background:#042247;border:1px solid #00cfff;border-radius:12px;padding:15px}
+.panel h3{color:#2ed2ff;margin-bottom:10px}
+.chart{height:380px}
+ul{line-height:2}
+@media(max-width:1000px){.cards,.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>INFOGRAFIS<br>PELAYANAN KESEHATAN</h1>
+<h2>KEJADIAN KEBAKARAN</h2>
+</div>
+
+<div class="tabs">
+<button class="tab active" onclick="loadData('kem',this)">Kemayoran Gempol</button>
+<button class="tab" onclick="loadData('joh',this)">Johar Baru</button>
+</div>
+
+<div class="cards">
+<div class="card red"><h3 id="kejadian">1</h3><div>Kejadian</div></div>
+<div class="card orange"><h3 id="rumah">250</h3><div>Rumah Terdampak</div></div>
+<div class="card blue"><h3 id="pengungsi">678</h3><div>Pengungsi</div></div>
+<div class="card green"><h3 id="pasien">253</h3><div>Total Pasien</div></div>
+</div>
+
+<div class="cards">
+<div class="card blue"><h3 id="kk">330</h3><div>KK Terdampak</div></div>
+<div class="card green"><h3 id="rj">251</h3><div>Rawat Jalan</div></div>
+<div class="card red"><h3 id="ri">2</h3><div>Rawat Inap</div></div>
+<div class="card orange"><h3 id="pos">2</h3><div>Pos Kesehatan</div></div>
+</div>
+
+<div class="row">
+<div class="panel"><h3>Sebaran Jenis Kelamin</h3><div class="chart"><canvas id="gender"></canvas></div></div>
+<div class="panel"><h3>Diagnosa 5 Penyakit Terbanyak</h3><div class="chart"><canvas id="diag"></canvas></div></div>
+</div>
+
+<div class="row">
+<div class="panel"><h3>Ringkasan Kejadian</h3><div id="summary"></div></div>
+<div class="panel"><h3>Upaya Kesehatan Yang Dilakukan</h3><ul id="upaya"></ul></div>
+</div>
+</div>
+
+<script>
+const data={
+kem:{rumah:250,pengungsi:678,pasien:253,kk:330,rj:251,ri:2,pos:2,
+gender:[124,129],diagLabels:['Hipertensi','Headache','Nasofaringitis','Panic Disorder','Dispnea'],diag:[46,24,19,5,4],
+summary:'Jl. Kemayoran Gempol RT 02 RW 05, Kel. Kebon Kosong, Kec. Kemayoran, Jakarta Pusat<br><br>Jumlah Jiwa: 678<br>KK: 330<br>Rumah: 250',
+upaya:['Mensiagakan Tenaga Kesehatan 24 Jam','Mensiagakan Ambulans 24 Jam','Pelayanan Sub Klaster Kesehatan','Pemantauan dan Pelaporan Berkala','Rujukan ke RSUD Kemayoran dan RSUD Tarakan']},
+joh:{rumah:36,pengungsi:158,pasien:72,kk:61,rj:72,ri:0,pos:1,
+gender:[27,45],diagLabels:['Hipertensi','Headache','Nasofaringitis Akut'],diag:[15,16,1],
+summary:'RT/RW 009/007 Kel. Tanah Tinggi, Kec. Johar Baru<br><br>Jumlah Jiwa: 240<br>KK: 61<br>Rumah: 36',
+upaya:['Mensiagakan Tenaga Kesehatan 24 Jam','Mensiagakan unit Ambulans 24 Jam','Memberikan pelayanan Sub Klaster Kesehatan','Melakukan Pemantauan dan Pelaporan Berkala']}
+};
+let genderChart,diagChart;
+function loadData(k,btn){
+if(btn){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}
+const d=data[k];
+rumah.innerText=d.rumah;pengungsi.innerText=d.pengungsi;pasien.innerText=d.pasien;kk.innerText=d.kk;rj.innerText=d.rj;ri.innerText=d.ri;pos.innerText=d.pos;
+summary.innerHTML=d.summary;
+upaya.innerHTML=d.upaya.map(x=>'<li>'+x+'</li>').join('');
+if(genderChart) genderChart.destroy();
+if(diagChart) diagChart.destroy();
+genderChart=new Chart(document.getElementById('gender'),{type:'doughnut',data:{labels:['Laki-laki','Perempuan'],datasets:[{data:d.gender}]},options:{maintainAspectRatio:false}});
+diagChart=new Chart(document.getElementById('diag'),{type:'pie',data:{labels:d.diagLabels,datasets:[{data:d.diag}]},options:{maintainAspectRatio:false}});
+anime({targets:'.card h3',scale:[0.8,1],duration:800});
+}
+loadData('kem');
+</script>
+</body>
+</html>
