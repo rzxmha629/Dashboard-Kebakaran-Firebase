@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>INFOGRAFIS PELAYANAN KESEHATAN</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#021126;
+color:white;
+overflow-x:hidden;
+}
+
+.container{
+width:100%;
+min-height:100vh;
+padding:12px;
+}
+
+.header{
+background:#042247;
+border:1px solid #00cfff;
+border-radius:14px;
+padding:20px;
+text-align:center;
+box-shadow:0 0 25px #00cfff55;
+margin-bottom:15px;
+}
+
+.header h1{
+font-size:56px;
+line-height:1;
+font-weight:800;
+}
+
+.header h2{
+color:#ff4040;
+margin-top:10px;
+}
+
+.tabs{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:15px;
+}
+
+.tab{
+padding:10px 20px;
+border:1px solid #00cfff;
+background:#06214a;
+color:#fff;
+border-radius:10px;
+cursor:pointer;
+transition:.3s;
+}
+
+.tab:hover{
+transform:translateY(-2px);
+}
+
+.active{
+background:#00cfff;
+color:#000;
+font-weight:bold;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-bottom:12px;
+}
+
+.card{
+background:#042247;
+padding:20px;
+border-radius:12px;
+text-align:center;
+position:relative;
+overflow:hidden;
+}
+
+.card::before{
+content:'';
+position:absolute;
+inset:-200%;
+background:
+linear-gradient(
+45deg,
+transparent,
+rgba(255,255,255,.15),
+transparent
+);
+animation:shine 6s linear infinite;
+}
+
+@keyframes shine{
+from{transform:translateX(-100%)}
+to{transform:translateX(100%)}
+}
+
+.red{
+border:2px solid #ff4040;
+}
+
+.orange{
+border:2px solid orange;
+}
+
+.blue{
+border:2px solid #00cfff;
+}
+
+.green{
+border:2px solid #00ff88;
+}
+
+.card h3{
+font-size:48px;
+}
+
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-bottom:12px;
+}
+
+.panel{
+background:#042247;
+border:1px solid #00cfff;
+border-radius:12px;
+padding:15px;
+}
+
+.panel h3{
+color:#2ed2ff;
+margin-bottom:10px;
+}
+
+.chart{
+height:380px;
+}
+
+ul{
+line-height:2;
+padding-left:20px;
+}
+
+#summary{
+line-height:1.8;
+}
+
+.footer{
+text-align:center;
+padding:15px;
+color:#89dfff;
+}
+
+@media(max-width:1000px){
+
+.cards{
+grid-template-columns:1fr;
+}
+
+.row{
+grid-template-columns:1fr;
+}
+
+.header h1{
+font-size:36px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>
+INFOGRAFIS<br>
+PELAYANAN KESEHATAN
+</h1>
+
+<h2>
+KEJADIAN KEBAKARAN
+</h2>
+
+</div>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="cards">
+
+<div class="card red">
+<h3>1</h3>
+<div>Kejadian</div>
+</div>
+
+<div class="card orange">
+<h3 id="rumah">0</h3>
+<div>Rumah Terdampak</div>
+</div>
+
+<div class="card blue">
+<h3 id="pengungsi">0</h3>
+<div>Pengungsi</div>
+</div>
+
+<div class="card green">
+<h3 id="pasien">0</h3>
+<div>Total Pasien</div>
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="card blue">
+<h3 id="kk">0</h3>
+<div>KK Terdampak</div>
+</div>
+
+<div class="card green">
+<h3 id="rj">0</h3>
+<div>Rawat Jalan</div>
+</div>
+
+<div class="card red">
+<h3 id="ri">0</h3>
+<div>Rawat Inap</div>
+</div>
+
+<div class="card orange">
+<h3 id="pos">0</h3>
+<div>Pos Kesehatan</div>
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="panel">
+<h3>Sebaran Jenis Kelamin</h3>
+<div class="chart">
+<canvas id="gender"></canvas>
+</div>
+</div>
+
+<div class="panel">
+<h3>Diagnosa 5 Penyakit Terbanyak</h3>
+<div class="chart">
+<canvas id="diag"></canvas>
+</div>
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="panel">
+
+<h3>Ringkasan Kejadian</h3>
+
+<div id="summary"></div>
+
+</div>
+
+<div class="panel">
+
+<h3>Upaya Kesehatan Yang Dilakukan</h3>
+
+<ul id="upaya">
+
+<li>Mensiagakan Tenaga Kesehatan 24 Jam</li>
+<li>Mensiagakan Ambulans 24 Jam</li>
+<li>Pelayanan Sub Klaster Kesehatan</li>
+<li>Pemantauan dan Pelaporan Berkala</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<div class="footer">
+Dashboard Kebakaran Firebase
+</div>
+
+<script type="module">
+
+import { db } from "./firebase-config.js";
+
+import {
+collection,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+let genderChart;
+let diagChart;
+
+let allData={};
+
+const diagnosaManual={
+kemayoran:{
+labels:[
+'Hipertensi',
+'Headache',
+'Nasofaringitis',
+'Panic Disorder',
+'Dispnea'
+],
+data:[
+46,
+24,
+19,
+5,
+4
+]
+},
+joharbaru:{
+labels:[
+'Hipertensi',
+'Headache',
+'Nasofaringitis Akut'
+],
+data:[
+15,
+16,
+1
+]
+}
+};
+
+async function loadFirestore(){
+
+const snapshot=
+await getDocs(
+collection(db,"kebakaran")
+);
+
+snapshot.forEach(doc=>{
+
+allData[doc.id]=doc.data();
+
+});
+
+createTabs();
+
+const firstKey=
+Object.keys(allData)[0];
+
+if(firstKey){
+
+loadData(firstKey);
+
+}
+
+}
+
+function createTabs(){
+
+const tabs=
+document.getElementById("tabs");
+
+tabs.innerHTML="";
+
+Object.keys(allData)
+.forEach((id,index)=>{
+
+const btn=
+document.createElement("button");
+
+btn.className=
+"tab"+
+(index===0?" active":"");
+
+btn.innerText=
+allData[id].lokasi;
+
+btn.onclick=()=>{
+
+document
+.querySelectorAll(".tab")
+.forEach(x=>
+x.classList.remove("active")
+);
+
+btn.classList.add("active");
+
+loadData(id);
+
+};
+
+tabs.appendChild(btn);
+
+});
+
+}
+
+function loadData(id){
+
+const d=allData[id];
+
+document.getElementById("rumah").innerText=
+d.rumah||0;
+
+document.getElementById("pengungsi").innerText=
+d.pengungsi||0;
+
+document.getElementById("pasien").innerText=
+d.totalPasien||0;
+
+document.getElementById("kk").innerText=
+d.kk||0;
+
+document.getElementById("rj").innerText=
+d.rawatJalan||0;
+
+document.getElementById("ri").innerText=
+d.rawatInap||0;
+
+document.getElementById("pos").innerText=
+d.poskes||0;
+
+document.getElementById("summary").innerHTML=`
+
+<b>Lokasi :</b><br>
+${d.lokasi}
+
+<br><br>
+
+<b>Jumlah Jiwa :</b>
+${d.jiwa}
+
+<br>
+
+<b>KK :</b>
+${d.kk}
+
+<br>
+
+<b>Rumah :</b>
+${d.rumah}
+
+`;
+
+if(genderChart){
+
+genderChart.destroy();
+
+}
+
+genderChart=
+new Chart(
+document.getElementById("gender"),
+{
+type:"doughnut",
+data:{
+labels:[
+"Laki-laki",
+"Perempuan"
+],
+datasets:[{
+data:[
+d.lakiLaki||0,
+d.perempuan||0
+]
+}]
+},
+options:{
+maintainAspectRatio:false
+}
+}
+);
+
+if(diagChart){
+
+diagChart.destroy();
+
+}
+
+const dg=
+diagnosaManual[id];
+
+if(dg){
+
+diagChart=
+new Chart(
+document.getElementById("diag"),
+{
+type:"pie",
+data:{
+labels:dg.labels,
+datasets:[{
+data:dg.data
+}]
+},
+options:{
+maintainAspectRatio:false
+}
+}
+);
+
+}
+
+anime({
+targets:'.card h3',
+scale:[0.8,1],
+duration:800
+});
+
+}
+
+loadFirestore();
+
+</script>
+
+</body>
+</html>
