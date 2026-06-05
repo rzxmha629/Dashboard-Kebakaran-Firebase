@@ -420,32 +420,30 @@ tabs.appendChild(btn);
 
 function loadData(id){
 
-const d=allData[id];
+const d = allData[id];
 
-document.getElementById("rumah").innerText=
-d.rumah||0;
+document.getElementById("rumah").innerText =
+d.rumah || 0;
 
-document.getElementById("pengungsi").innerText=
-d.pengungsi||0;
+document.getElementById("pengungsi").innerText =
+d.pengungsi || 0;
 
-document.getElementById("pasien").innerText=
-d.totalPasien||0;
+document.getElementById("pasien").innerText =
+d.totalpasien || 0;
 
-document.getElementById("kk").innerText=
-d.kk||0;
+document.getElementById("kk").innerText =
+d.kk || 0;
 
-document.getElementById("rj").innerText=
-d.rawatJalan||0;
+document.getElementById("rj").innerText =
+d.rawatjalan || 0;
 
-document.getElementById("ri").innerText=
-d.rawatInap||0;
+document.getElementById("ri").innerText =
+d.rawatinap || 0;
 
-document.getElementById("pos").innerText=
-d.poskes||0;
+document.getElementById("pos").innerText =
+d.poskes || 0;
 
-document.getElementById("summary").innerHTML=`
-
-<b>Lokasi :</b><br>
+document.getElementById("summary").innerHTML = ` <b>Lokasi :</b><br>
 ${d.lokasi}
 
 <br><br>
@@ -462,14 +460,72 @@ ${d.kk}
 
 <b>Rumah :</b>
 ${d.rumah}
-
 `;
 
 if(genderChart){
-
 genderChart.destroy();
+}
+
+genderChart = new Chart(
+document.getElementById("gender"),
+{
+type:"doughnut",
+data:{
+labels:[
+"Laki-laki",
+"Perempuan"
+],
+datasets:[{
+data:[
+d.lakiLaki || 0,
+d.perempuan || 0
+]
+}]
+},
+options:{
+maintainAspectRatio:false
+}
+}
+);
+
+if(diagChart){
+diagChart.destroy();
+}
+
+if(d.diagnosa){
+
+const labels =
+d.diagnosa.map(x => x.nama);
+
+const values =
+d.diagnosa.map(x => x.jumlah);
+
+diagChart = new Chart(
+document.getElementById("diag"),
+{
+type:"pie",
+data:{
+labels:labels,
+datasets:[{
+data:values
+}]
+},
+options:{
+maintainAspectRatio:false
+}
+}
+);
 
 }
+
+anime({
+targets:'.card h3',
+scale:[0.8,1],
+duration:800
+});
+
+}
+
 
 genderChart=
 new Chart(
