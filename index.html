@@ -319,61 +319,54 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 let genderChart;
 let diagChart;
 
-let allData={};
+let allData = {};
 
 async function loadFirestore(){
 
-const snapshot=
-await getDocs(
+const snapshot = await getDocs(
 collection(db,"kebakaran")
 );
 
 snapshot.forEach(doc=>{
 
-allData[doc.id]=doc.data();
+allData[doc.id] = doc.data();
 
 });
 
+console.log("DATA FIRESTORE");
+console.log(allData);
+
 createTabs();
 
-const firstKey=
-Object.keys(allData)[0];
+const firstKey = Object.keys(allData)[0];
 
 if(firstKey){
-
 loadData(firstKey);
-
 }
 
 }
 
 function createTabs(){
 
-const tabs=
-document.getElementById("tabs");
+const tabs = document.getElementById("tabs");
 
-tabs.innerHTML="";
+tabs.innerHTML = "";
 
-Object.keys(allData)
-.forEach((id,index)=>{
+Object.keys(allData).forEach((id,index)=>{
 
-const btn=
-document.createElement("button");
+const btn = document.createElement("button");
 
-btn.className=
-"tab"+
-(index===0?" active":"");
+btn.className =
+"tab" + (index===0 ? " active" : "");
 
-btn.innerText=
-allData[id].lokasi;
+btn.innerText =
+allData[id].lokasi || id;
 
-btn.onclick=()=>{
+btn.onclick = ()=>{
 
 document
 .querySelectorAll(".tab")
-.forEach(x=>
-x.classList.remove("active")
-);
+.forEach(x=>x.classList.remove("active"));
 
 btn.classList.add("active");
 
@@ -412,7 +405,8 @@ d.rawatinap || 0;
 document.getElementById("pos").innerText =
 d.poskes || 0;
 
-document.getElementById("summary").innerHTML = ` <b>Lokasi :</b><br>
+document.getElementById("summary").innerHTML = `
+<b>Lokasi :</b><br>
 ${d.lokasi}
 
 <br><br>
@@ -494,66 +488,6 @@ duration:800
 });
 
 }
-
-
-genderChart=
-new Chart(
-document.getElementById("gender"),
-{
-type:"doughnut",
-data:{
-labels:[
-"Laki-laki",
-"Perempuan"
-],
-datasets:[{
-data:[
-d.lakiLaki||0,
-d.perempuan||0
-]
-}]
-},
-options:{
-maintainAspectRatio:false
-}
-}
-);
-
-if(diagChart){
-
-diagChart.destroy();
-
-}
-
-const dg=
-diagnosaManual[id];
-
-if(dg){
-
-diagChart=
-new Chart(
-document.getElementById("diag"),
-{
-type:"pie",
-data:{
-labels:dg.labels,
-datasets:[{
-data:dg.data
-}]
-},
-options:{
-maintainAspectRatio:false
-}
-}
-);
-
-}
-
-anime({
-targets:'.card h3',
-scale:[0.8,1],
-duration:800
-});
 
 loadFirestore();
 
