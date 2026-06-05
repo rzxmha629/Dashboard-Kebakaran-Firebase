@@ -9,8 +9,6 @@
 
 <p>Setup berhasil.</p>
 
-</body>
-</html>
 <script type="module">
 
 import { db } from "./firebase-config.js";
@@ -23,11 +21,11 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 async function loadLocations(){
 
-const snapshot =
-await getDocs(
+const snapshot = await getDocs(
 collection(db,"kebakaran")
 );
 
+console.log("DATA FIRESTORE:");
 console.log(snapshot.docs);
 
 }
@@ -35,3 +33,6 @@ console.log(snapshot.docs);
 loadLocations();
 
 </script>
+
+</body>
+</html>
