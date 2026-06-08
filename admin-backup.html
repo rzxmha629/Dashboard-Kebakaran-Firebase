@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard Kebakaran</title>
+</head>
+
+<body>
+
+<h1>Admin Dashboard Kebakaran</h1>
+
+<form id="loginForm">
+
+<input type="email" id="email" placeholder="Email">
+
+<br><br>
+
+<input type="password" id="password" placeholder="Password">
+
+<br><br>
+
+<button type="submit">
+Login
+</button>
+
+</form>
+
+<div id="status"></div>
+
+<script type="module">
+
+import { auth } from "./firebase-config.js";
+
+import {
+signInWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+document
+.getElementById("loginForm")
+.addEventListener("submit", async(e)=>{
+
+e.preventDefault();
+
+try{
+
+await signInWithEmailAndPassword(
+auth,
+document.getElementById("email").value,
+document.getElementById("password").value
+);
+
+window.location.href =
+"./dashboard.html";
+
+}catch(err){
+
+document.getElementById("status").innerHTML =
+err.message;
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
